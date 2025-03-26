@@ -63,5 +63,38 @@ class TestDecisionCoverage(unittest.TestCase):
         result = Triangle.classify(4, 2, 2)  # 2+2=4 => Not strictly greater
         self.assertEqual(result, Triangle.Type.INVALID)
 
+    def test_isosceles_ac_valid(self):
+        result = Triangle.classify(4, 5, 4)  # a=4, c=4, b=5 => 4+4=8 > 5
+        self.assertEqual(result, Triangle.Type.ISOSCELES)
+    
+    def test_isosceles_ac_invalid(self):
+        result = Triangle.classify(4, 8, 4)  # 4+4=8 => equals b, not strictly greater
+        self.assertEqual(result, Triangle.Type.INVALID)
+    
+    def test_isosceles_bc_valid(self):
+        result = Triangle.classify(5, 4, 4)  # b=4, c=4 => 4+4=8 > a=5
+        self.assertEqual(result, Triangle.Type.ISOSCELES)
+    
+    def test_isosceles_bc_invalid(self):
+        result = Triangle.classify(9, 4, 4)  # b=4, c=4 => 4+4=8 < a=9
+        self.assertEqual(result, Triangle.Type.INVALID)
+
+    def test_isosceles_ac_true(self):
+        # a == c, sum > b => ISOSCELES (trian == 2)
+        self.assertEqual(Triangle.classify(5, 3, 5), Triangle.Type.ISOSCELES)
+
+    def test_isosceles_ac_false(self):
+        # a == c, but sum <= b => trian==2 but fails sum => INVALID
+        self.assertEqual(Triangle.classify(4, 8, 4), Triangle.Type.INVALID)
+
+    def test_isosceles_bc_true(self):
+        # b == c, sum > a => ISOSCELES (trian == 3)
+        self.assertEqual(Triangle.classify(3, 5, 5), Triangle.Type.ISOSCELES)
+
+    def test_isosceles_bc_false(self):
+        # b == c, but sum <= a => INVALID
+        self.assertEqual(Triangle.classify(9, 4, 4), Triangle.Type.INVALID)
+
+
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
